@@ -3,7 +3,7 @@ import { ObjectSchema } from 'joi';
 
 
 @Injectable()
-export class UserValidationPipe implements PipeTransform {
+export class JoiValidationPipe implements PipeTransform {
   constructor(private schema: ObjectSchema) {}
 
 //value - argomento del method attualmente processato prima che venga ricevuto dal 

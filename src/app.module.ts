@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
+//Modules Imports
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
+import { ContactModule } from './contat/contact.module';
 
 @Module({
   imports: [
@@ -10,9 +13,8 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
       useFactory: async(config: ConfigService)=>({uri: config.get("DATABASE_URL")}),
     }),
-    UserModule
+    UserModule,
+    ContactModule
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

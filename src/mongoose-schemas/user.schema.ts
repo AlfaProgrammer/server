@@ -1,7 +1,9 @@
 import { Schema } from "mongoose"
+import { LocationSchema } from "./location.schema"
 
 export const UserSchema = new Schema({
     firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
     email: { 
         type: String,  
         required: [true, "email is required"], 
@@ -17,7 +19,7 @@ export const UserSchema = new Schema({
     },
     businessType: String,
     phoneNumber: String,
-    country: {type: Schema.Types.ObjectId, ref: "Country"},
+    location: LocationSchema,
     role: {
         type: String,
         enum: ["admin", "editor"], // e altri che se ne possono aggiungere 
@@ -39,7 +41,5 @@ export const UserSchema = new Schema({
     // },
 
     // expenses: [{type: Schema.Types.ObjectId, ref: "Expense"}],
-
-    // tasks:[{type: Schema.Types.ObjectId, ref: "Task"}]
 
 })

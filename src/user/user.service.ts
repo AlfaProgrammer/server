@@ -2,7 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { Model } from "mongoose" ;
 import { InjectModel } from "@nestjs/mongoose";
 import { UserSchema } from "src/mongoose-schemas/user.schema";
-import { CreateUserDTO } from "./dto"
+import { CreateUserDTO } from "src/validation-types/DTOs/dtos";
+
 
 //se le funzioni sul DB non ritornano una Promise non posso usare il catch per 
 //cattura gli errori quando cerchero di risolverle nei controller

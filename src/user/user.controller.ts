@@ -1,7 +1,8 @@
 import { Body, Controller, HttpException, HttpStatus, ParseIntPipe, Post, UsePipes } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UserValidationPipe } from "../validation.pipe";
-import { userJoiSchema, CreateUserDTO } from "./dto"
+import { JoiValidationPipe } from "../validation.pipe";
+import { userJoiSchema } from "src/validation-types/joi-validation-schemas";
+import { CreateUserDTO } from "src/validation-types/DTOs/dtos";
 //Tutte le validazione dei dati in entrata vengon fatti nel pipe di validazione
 //Gli errori rispettivi alla validazione verranno lanciati da lì. 
 
@@ -12,22 +13,23 @@ import { userJoiSchema, CreateUserDTO } from "./dto"
 //questi errori saranno generalmente legati solo al database
 
 
-@Controller('user')
+@Controller('users')
 export class UserController{
     constructor(private userService: UserService){}
 
     @Post('create')
-    @UsePipes(new UserValidationPipe(userJoiSchema))
+    @UsePipes(new JoiValidationPipe(userJoiSchema))
     async createUser(@Body() user: CreateUserDTO){
         try {
             //tentativo di risolvere la promise
             const resp = await this.userService.createUser(user)
             return resp
+
         } catch (error) {  
 
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
-                message: error
+                message: error.message
             }, HttpStatus.BAD_REQUEST)
         }        
     }
