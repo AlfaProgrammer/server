@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { ContactModule } from './contat/contact.module';
+import { ProductModule } from './product/product.module';
+import { SaleModule } from './sale/sale.module';
 
 @Module({
   imports: [
@@ -14,7 +16,9 @@ import { ContactModule } from './contat/contact.module';
       useFactory: async(config: ConfigService)=>({uri: config.get("DATABASE_URL")}),
     }),
     UserModule,
-    ContactModule
+    ContactModule,
+    ProductModule,
+    SaleModule
   ],
 })
 export class AppModule {}

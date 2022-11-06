@@ -1,86 +1,108 @@
 import * as Joi from "joi";
 
+//////////////////////////////////////////////////Custom RULES///////////////////////////////////////
+function referenceIdRule(){return Joi.string()
+    .required()
+    .regex(/^[a-fA-F0-9]{24}$/)
+    .messages({
+        "string.pattern.base": "{#label} must be a MongoDB ObjectID string",
+})}
+
+function locationRule(){return Joi.object({
+    country: Joi.string().required(),
+    state:Joi.string().required(), //stato o regione
+    province: Joi.string().required(),
+    city: Joi.string().required(),
+    address: Joi.string().required() 
+}).required()}
+
+function importanceLevelRule(){return Joi.string().valid(
+    "high",
+    "medium",
+    "low"
+).required()}
+
+function taskStateRule(){return Joi.string().valid(
+        "executed", 
+        "notExecuted"
+    ).default("notExecuted").required()
+}
+
+function emailRule(){return Joi.string()
+    .required()
+    .email()
+}
+
+function progressRule(){return Joi.string().required().valid(
+    "new",
+    "pending",
+    "approved",
+    "notApproved",
+    "contacted"
+)}
+
+function businessTypeRule(){return Joi.string().required().valid("individual", "business")}
+
+//se ho una regola di default il required non è necessario
+function paymentStateRule(){return Joi.string().valid(
+    "pending",
+    "paid",
+    "rejected",
+    "refund"
+).required()}
+///////////////////////////////////////////////////SCHEMAS///////////////////////////////////////////////
+
 export const userJoiSchema = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
-    email: Joi.string()
-        .required()
-        .email()
-        .messages({"string.email": "User email is invalid"}),
+    email: emailRule().messages({"string.email": "User email is invalid"}),
+
     password: Joi.string().required(),
     passwordConfirm: Joi.valid(Joi.ref("password"))
         .required()
         .messages({"any.only": "Make sure password-confirmation matches password"}),
+    
     businessType: Joi.string().required(),
     phoneNumber: Joi.string().required(),
+
     role: Joi.string().valid("admin", "editor").required(),
     active: Joi.boolean().required(),
-    location: Joi.object({
-        country: Joi.string().required(),
-        state:Joi.string().required(), //stato o regione
-        province: Joi.string().required(),
-        city: Joi.string().required(),
-        address: Joi.string().required() 
-    }).required(),
+
+    location: locationRule(),
 })
-
-
 
 export const contactJoiSchema = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
-    email: Joi.string()
-        .required()
-        .email()
-        .messages({"string.email": "Contact email is invalid"}),
+    email: emailRule().messages({"string.email": "Contact email is invalid"}),
+
     phoneNumber: Joi.string().required(),
     spokenLanguage: Joi.string().required(),
-    location: Joi.object({
-        country: Joi.string().required(),
-        state:Joi.string().required(), //stato o regione
-        province: Joi.string().required(),
-        city: Joi.string().required(),
-        address: Joi.string().required()
-    }).required(),
-    businessType: Joi.string().required().valid("individual", "business"),
+
+    location: locationRule(),
+
+    businessType: businessTypeRule(),
     iban: Joi.string().required(),
     trakingCode: Joi.string().required(),
-    progress: Joi.string().required().valid(
-        "new",
-        "pending",
-        "approved",
-        "notApproved",
-        "contacted"
-    ),
-    createdBy: Joi.string()
-        .required()
-        .alphanum()
-        .length(24) //la grandezza di un ObjectId in MongoDB
-        .messages({
-            "string.length": "Length must be 24chars long",
-            "any.required": "createdBy id is needed"
-        }),
+    progress: progressRule(),
+
+    createdBy: referenceIdRule(),
     //Not Required fields ... 
     //Lo metto come oggetto perche aggiungo una annotazione o intermediario alla volta
     //devo validare questo dato. Il fatto che nel db sia un array, non mi deve interessare qui
     annotations: Joi.object({
+
         title: Joi.string().required(),
         description: Joi.string().required(),
-        importanceLevel: Joi.string().required().valid(
-            "high",
-            "medium",
-            "low"
-        ),
+        importanceLevel: importanceLevelRule(),
+
         date: Joi.date().required()
     }),
 
     intermediaries: Joi.object({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        email: Joi.string()
-            .required()
-            .email()
-            .messages({"string.email": "Intermediary email is invalid"}),
+        email: emailRule().messages({"string.email": "Intermediary email is invalid"}),
         phoneNumber: Joi.string().required()
     }),
 
@@ -90,3 +112,69 @@ export const contactJoiSchema = Joi.object({
         identifier: Joi.string().required()
     })
 })
+
+export const productJoiSchema = Joi.object({
+    name: Joi.string().required(),
+
+    warehouseName: Joi.string().required(),
+    warehouseLocation: locationRule(),
+    warehouseStockQuantity: Joi.number().required(),
+    notifyWhenQuantityLessThen: Joi.number().required(),
+
+    productPositionIntoWharehouse: Joi.string().required(),
+
+    purchasePrice: Joi.number().required(),
+    sellingPrice: Joi.number().required(),
+    paymentMethod: Joi.string().required(),
+    permanentDiscount: Joi.number().required(),
+
+    contact: referenceIdRule(),
+    // contactCategory: Joi.string().required(),
+    createdBy: referenceIdRule(),
+})
+
+export const taskJoiSchema = Joi.object({
+
+    title: Joi.string().required(),
+    
+    importanceLevel: importanceLevelRule(),
+
+    description: Joi.string().required(),
+
+    state: taskStateRule(),
+
+    createdBy: referenceIdRule(),
+    assignedTo: referenceIdRule(),
+})
+
+export const saleJoiSchema = Joi.object({
+    fromCatalog: Joi.boolean().required(),
+    product: Joi.alternatives().conditional("fromCatalog", {
+        is: true,
+        then: referenceIdRule(),
+        otherwise: Joi.forbidden().messages({
+            "any.unknown": "the product field is required only when the product is coming from the catalog"
+        }) 
+    }),
+
+    name: Joi.string(),
+    discount: Joi.number().required(), 
+    paymentState: paymentStateRule(),
+    paymentMethod: Joi.string().required(),
+
+    quantity: Joi.number().required(),
+    date: Joi.date().required(),
+    costPerUnit: Joi.number().required(),
+    country: locationRule(),
+
+    contact: referenceIdRule(), //ObjectId
+    createdBy: referenceIdRule() //ObjectId
+})
+
+//DYNAMIC SCHEM BASED ON CONDITIONS 
+/* Use 
+    - alternatives 
+    - conditionals
+    - when 
+    https://stackoverflow.com/questions/59861503/joi-validator-conditional-schema
+*/

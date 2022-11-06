@@ -2,7 +2,7 @@ import { Body, Controller, HttpException, HttpStatus, ParseIntPipe, Post, UsePip
 import { UserService } from "./user.service";
 import { JoiValidationPipe } from "../validation.pipe";
 import { userJoiSchema } from "src/validation-types/joi-validation-schemas";
-import { CreateUserDTO } from "src/validation-types/DTOs/dtos";
+import { UserDTO } from "src/validation-types/DTOs/dtos";
 //Tutte le validazione dei dati in entrata vengon fatti nel pipe di validazione
 //Gli errori rispettivi alla validazione verranno lanciati da lì. 
 
@@ -19,7 +19,7 @@ export class UserController{
 
     @Post('create')
     @UsePipes(new JoiValidationPipe(userJoiSchema))
-    async createUser(@Body() user: CreateUserDTO){
+    async createUser(@Body() user: UserDTO){
         try {
             //tentativo di risolvere la promise
             const resp = await this.userService.createUser(user)
