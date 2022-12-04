@@ -1,4 +1,7 @@
-import { Schema } from "mongoose";
+import { Schema, HydratedDocument, InferSchemaType } from "mongoose";
+
+export type ISale = InferSchemaType<typeof SaleSchema>
+export type SaleDocument = HydratedDocument<ISale>
 
 export const SaleSchema = new Schema({
 
@@ -48,18 +51,17 @@ export const SaleSchema = new Schema({
     contact: {type: Schema.Types.ObjectId, ref: "Contact", required: true}, //nome e categoria contatto mi servono a prescindere se sia da catalogo o meno 
     // contactCategory: { type: Schema.Types.ObjectId, ref: "Contact", required: true },
     //chi crea la vendita
-    createdBy: {type: Schema.Types.ObjectId, required: true}
+    createdBy: {type: Schema.Types.ObjectId, ref: "User", required: true}
 }, {timestamps: true})
 
 
-//MIDDLEWARES AND CUSTOM FUNCTIONS/ACTIONS
-//https://mongoosejs.com/docs/middleware.html#order
-//pre e post validate vengono invocati prima di pre "save"
-// SaleSchema.post("save", async function(){
-//     const {warehouseStockQuantity:} = await this.populate({path: "product", select:"warehouseStockQuantity"})
-
-//     console.log(this.product.warehouseStockQuantity);
-        
+// MIDDLEWARES AND CUSTOM FUNCTIONS/ACTIONS
+// https://mongoosejs.com/docs/middleware.html#order
+// pre e post validate vengono invocati prima di pre "save"
+// SaleSchema.("save", async function(next){
+//     const x = await this.populate("product");
+//     console.log(x.product);    
+//     next();       
 // })
 
 //callback(this, next) next è il prossimo middleware. Solitamente serve se 

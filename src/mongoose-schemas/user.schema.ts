@@ -1,5 +1,5 @@
 import { Schema } from "mongoose"
-import { LocationSchema } from "./location.schema"
+import { LocationSchema } from "./support-schemas/location.schema"
 
 export const UserSchema = new Schema({
     firstName: {type: String, required: true},

@@ -1,5 +1,23 @@
-import { Schema } from "mongoose";
-import { LocationSchema } from "./location.schema";
+import { HydratedDocument, InferSchemaType, Schema } from "mongoose";
+import { LocationSchema } from "./support-schemas/location.schema";
+
+// per utilizzare ts per creare lo schema, devo creare una interfaccia 
+    // dopo di che lo chema sarà mappato su quella interfaccia
+    // essendo che ho ua ProductDTO che utilizzo già nel mio codice, lo estendo, Omettendo alcuni parametri particolari
+    // come quelli che devono rappresentare un ObjectId o SottoSchema in questo modo
+
+    // export interface IProduct extends Omit<ProductDTO, "contact" | "createdBy">{
+    //     contact: Types.ObjectId;
+    //     createdBy: Types.ObjectId;
+    // }
+    // e poi da questa Inteface creare uno schema, const ProdcutSchema = new Schema<IPorduct>
+
+//Preferisco fare il contrario, ovvero, DEDURRE l'INTERFACCIA DALLO SCHEMA INIZIALE
+export type IProduct = InferSchemaType<typeof ProductSchema>;
+
+export type ProductDocument = HydratedDocument<IProduct>;
+//https://mongoosejs.com/docs/typescript.html hydrate document che implementa un interfaccia, rappresenta
+//un documento Mongoose con i method, virtuals, e tutte le features specifiche
 
 export const ProductSchema =  new Schema({
     

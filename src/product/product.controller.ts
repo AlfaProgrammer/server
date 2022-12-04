@@ -25,7 +25,7 @@ export class ProductController {
 
     @Get()
     async getProductByName(@Query("name") name){
-        return await this.productService.getProduct(name)
+        return await this.productService.getProductByName(name)
     }
     // @Post("create")
     // prova(@Body() x){

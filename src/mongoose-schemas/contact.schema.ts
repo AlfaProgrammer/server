@@ -1,8 +1,8 @@
 import { Schema } from "mongoose"
-import { AnnotationSchema } from "./annotation.schema"
-import { DocumentSchema } from "./document.schema"
-import { IntermediariesSchema } from "./intermediaries.schema"
-import { LocationSchema } from "./location.schema"
+import { AnnotationSchema } from "./support-schemas/annotation.schema"
+import { DocumentSchema } from "./support-schemas/document.schema"
+import { IntermediariesSchema } from "./support-schemas/intermediaries.schema"
+import { LocationSchema } from "./support-schemas/location.schema"
 
 export const ContactSchema = new Schema({
     //required fields firs

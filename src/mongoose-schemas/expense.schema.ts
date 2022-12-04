@@ -1,6 +1,6 @@
 import { required } from "joi"
 import { Schema } from "mongoose"
-import { LocationSchema } from "./location.schema"
+import { LocationSchema } from "./support-schemas/location.schema"
 
 export const ExpenseSchema = new Schema({
 
