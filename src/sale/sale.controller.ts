@@ -7,24 +7,17 @@ import { SaleService } from "./sale.service";
 
 @Controller("sales")
 export class SaleController{
-    constructor(
-        private saleService: SaleService,
-        private productService: ProductService
-    ){}
+    constructor(private saleService: SaleService){}
 
     @Post("create")
     @UsePipes(new JoiValidationPipe(saleJoiSchema))
     async createSale(@Body() data: SaleDTO){
         try {
             const sale = await this.saleService.createSale(data);
-            // const product = await this.productService.getProductById(data.product);
-            
-            // console.log(product.warehouseStockQuantity)
-
-            return sale
+            return sale;
         } catch (error) {
             throw new HttpException({
-                status: HttpStatus.BAD_GATEWAY,
+                status: HttpStatus.BAD_REQUEST,
                 message: error.message
             }, HttpStatus.BAD_REQUEST)
         }

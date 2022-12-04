@@ -53,16 +53,3 @@ export const SaleSchema = new Schema({
     //chi crea la vendita
     createdBy: {type: Schema.Types.ObjectId, ref: "User", required: true}
 }, {timestamps: true})
-
-
-// MIDDLEWARES AND CUSTOM FUNCTIONS/ACTIONS
-// https://mongoosejs.com/docs/middleware.html#order
-// pre e post validate vengono invocati prima di pre "save"
-// SaleSchema.("save", async function(next){
-//     const x = await this.populate("product");
-//     console.log(x.product);    
-//     next();       
-// })
-
-//callback(this, next) next è il prossimo middleware. Solitamente serve se 
-//metti il middleware prima pre("save")

@@ -16,17 +16,26 @@ export class ProductService{
         const ProductModel = mongoose.model("Product", ProductSchema)
         per creare poi un nuovo prodotto da inserire dentro questa collection 
         const newProduct = new ProductModel(data)
-        //con la dependency injection il primo passaggeio, dove creo il model basato sullo shcema viene fatto in automatico
+        con la dependency injection il primo passaggeio, dove creo il model basato sullo shcema viene fatto in automatico
+        dentro il constructor della calsse
     */
-    createProduct(newProduct: ProductDTO): Promise<IProduct>{
+    async createProduct(newProduct: ProductDTO): Promise<IProduct>{
         const createdProduct = new this.productModel(newProduct);
         return createdProduct.save()
     }
-    async getProductByName(productName){
+    async getProductByName(productName: string){
         return await this.productModel.where("name").equals(productName)
     }
 
-    async getProductById(productId){
-        return await this.productModel.findById(productId).exec();
+    async productByIdClosure(productId){
+        const product: IProduct = await this.productModel.findById(productId);
+        return{
+            getAllProductData: () => product,
+            getProdQuantity: () => product.warehouseStockQuantity
+        }
     }
+
+    // async getProductById(productId): Promise<IProduct>{
+    //     return this.productModel.findById(productId).exec();
+    // }
 }

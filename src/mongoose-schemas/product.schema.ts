@@ -13,7 +13,7 @@ import { LocationSchema } from "./support-schemas/location.schema";
     // e poi da questa Inteface creare uno schema, const ProdcutSchema = new Schema<IPorduct>
 
 //Preferisco fare il contrario, ovvero, DEDURRE l'INTERFACCIA DALLO SCHEMA INIZIALE
-export type IProduct = InferSchemaType<typeof ProductSchema>;
+export type IProduct = InferSchemaType<typeof ProductSchema>; //TypeScript Interface da usare nel codice
 
 export type ProductDocument = HydratedDocument<IProduct>;
 //https://mongoosejs.com/docs/typescript.html hydrate document che implementa un interfaccia, rappresenta
@@ -51,4 +51,5 @@ export const ProductSchema =  new Schema({
     createdBy: {type: Schema.Types.ObjectId, ref: "User", required: true}, 
     
 }, {timestamps: true});
-    
+
+
