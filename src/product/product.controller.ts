@@ -22,7 +22,6 @@ export class ProductController {
         }
     }
 
-
     @Get()
     async getProductByName(@Query("name") name){
         return await this.productService.getProductByName(name)

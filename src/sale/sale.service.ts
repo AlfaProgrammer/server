@@ -14,16 +14,21 @@ export class SaleService{
         private productService: ProductService
     ){}
 
-    async createSale(saleData: SaleDTO): Promise<typeof SaleSchema>{       
-        const sale = new this.saleModel(saleData); 
+    async createSale(saleData: SaleDTO): Promise<typeof SaleSchema>{
         
-        const product = await this.productService.productByIdClosure(saleData.product);
+        const sale = new this.saleModel(saleData); //creo nuova sale
         
+        const product = await this.productService.productByIdClosure(saleData.product); //recupero prodotto dal ref id 
+        
+        //Verifica che non superi la quantità a magazzino 
         if(product.getProdQuantity() < saleData.quantity){
             throw new Error("Sale quantity is greater than it's wareHouse availability");
-        }
+        }else{
+            //prima di salvare la SALE la quantità a magazzino deve essere diminuita 
+            await product.decreeseQuantity(saleData.quantity);
+            return sale.save();
+        }        
 
-        return sale.save();
     }
 
 

@@ -25,7 +25,7 @@ export const ProductSchema =  new Schema({
     
     warehouseName: {type: String, required: true},
     warehouseLocation: LocationSchema,
-    warehouseStockQuantity: {type: Number, required: true},
+    warehouseStockQuantity: {type: Number, required: true}, //diminuire ad ogni nuova vendita per la quantità della vendita stessa
     notifyWhenQuantityLessThen: {type: Number, required: true}, //Quando la quantità è inferiore a questa, notifica prodotto scarseggia
     
     productPositionIntoWharehouse: {type: String, required: true},

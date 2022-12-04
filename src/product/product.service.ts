@@ -27,11 +27,29 @@ export class ProductService{
         return await this.productModel.where("name").equals(productName)
     }
 
+    async updateProduct(productId, fieldToUpdate, newValue){
+        return this.productModel.updateOne({
+            _id: productId
+        }, {
+            [fieldToUpdate]: newValue
+        })
+    }
+
+    //creo una funzione che mi recupera un prodotto in base all'id e mi ritorna oggetto di funzioni
+    //che a loro volta restituiscono dati specifici di quel prodotto
     async productByIdClosure(productId){
         const product: IProduct = await this.productModel.findById(productId);
+
         return{
             getAllProductData: () => product,
-            getProdQuantity: () => product.warehouseStockQuantity
+            getProdQuantity: () => product.warehouseStockQuantity,
+            decreeseQuantity: async (saleQuantity) => {
+                await this.productModel.findByIdAndUpdate({
+                    _id: productId,
+                },{
+                    warehouseStockQuantity: product.warehouseStockQuantity - saleQuantity
+                });//potresti inserire un terzo oggetto con parametro upsert: true ma non è questo il caso migliore per questa funzionalità            
+            }
         }
     }
 
