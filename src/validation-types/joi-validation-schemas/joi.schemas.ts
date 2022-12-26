@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 
 //////////////////////////////////////////////////Custom RULES///////////////////////////////////////
-function referenceIdRule(){return Joi.string()
+function mongooseIdRule(){return Joi.string()
     .required()
     .regex(/^[a-fA-F0-9]{24}$/)
     .messages({
@@ -50,6 +50,15 @@ function paymentStateRule(){return Joi.string().valid(
     "rejected",
     "refund"
 ).required()}
+
+////////////////////////////////////////////////// OTHER DTOs ///////////////////////////////////////////
+export const updateProductFieldJoiSchema = Joi.object({
+    id: mongooseIdRule(),
+    fieldToUpdate: Joi.string().required(),
+    newValue: Joi.required()
+})
+
+
 ///////////////////////////////////////////////////SCHEMAS///////////////////////////////////////////////
 
 export const userJoiSchema = Joi.object({
@@ -86,7 +95,7 @@ export const contactJoiSchema = Joi.object({
     trakingCode: Joi.string().required(),
     progress: progressRule(),
 
-    createdBy: referenceIdRule(),
+    createdBy: mongooseIdRule(),
     //Not Required fields ... 
     //Lo metto come oggetto perche aggiungo una annotazione o intermediario alla volta
     //devo validare questo dato. Il fatto che nel db sia un array, non mi deve interessare qui
@@ -128,9 +137,9 @@ export const productJoiSchema = Joi.object({
     paymentMethod: Joi.string().required(),
     permanentDiscount: Joi.number().required(),
 
-    contact: referenceIdRule(),
+    contact: mongooseIdRule(),
     // contactCategory: Joi.string().required(),
-    createdBy: referenceIdRule(),
+    createdBy: mongooseIdRule(),
 })
 
 export const taskJoiSchema = Joi.object({
@@ -143,15 +152,15 @@ export const taskJoiSchema = Joi.object({
 
     state: taskStateRule(),
 
-    createdBy: referenceIdRule(),
-    assignedTo: referenceIdRule(),
+    createdBy: mongooseIdRule(),
+    assignedTo: mongooseIdRule(),
 })
 
 export const saleJoiSchema = Joi.object({
     fromCatalog: Joi.boolean().required(),
     product: Joi.alternatives().conditional("fromCatalog", {
         is: true,
-        then: referenceIdRule(),
+        then: mongooseIdRule(),
         otherwise: Joi.forbidden().messages({
             "any.unknown": "the product field is required only when the product is coming from the catalog"
         }) 
@@ -167,8 +176,8 @@ export const saleJoiSchema = Joi.object({
     costPerUnit: Joi.number().required(),
     country: locationRule(),
 
-    contact: referenceIdRule(), //ObjectId
-    createdBy: referenceIdRule() //ObjectId
+    contact: mongooseIdRule(), //ObjectId
+    createdBy: mongooseIdRule() //ObjectId
 })
 
 //DYNAMIC SCHEM BASED ON CONDITIONS 

@@ -30,12 +30,12 @@ export const SaleSchema = new Schema({
 
     paymentState: {
         type: String, 
-        enum: ["pending", "paid", "rejected", "refund"], 
+        enum: ["approved","pending", "paid", "rejected", "refund"], 
         default: "pending"
     },
 
     paymentMethod: {type: String, required: true},
-    quantity: {type: Number, required: true}, // <------------------- SOLVE THIS
+    quantity: {type: Number, required: true},
     date: {type: Date, required: true},
     costPerUnit: {
         type: Number, 
@@ -47,7 +47,7 @@ export const SaleSchema = new Schema({
         Inserisci product Location 
     */
     
-    //relations
+    //relationships
     contact: {type: Schema.Types.ObjectId, ref: "Contact", required: true}, //nome e categoria contatto mi servono a prescindere se sia da catalogo o meno 
     // contactCategory: { type: Schema.Types.ObjectId, ref: "Contact", required: true },
     //chi crea la vendita

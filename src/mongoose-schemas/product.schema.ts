@@ -2,7 +2,7 @@ import { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 import { LocationSchema } from "./support-schemas/location.schema";
 
 // per utilizzare ts per creare lo schema, devo creare una interfaccia 
-    // dopo di che lo chema sarà mappato su quella interfaccia
+    // dopo di che lo schema sarà mappato su quella interfaccia
     // essendo che ho ua ProductDTO che utilizzo già nel mio codice, lo estendo, Omettendo alcuni parametri particolari
     // come quelli che devono rappresentare un ObjectId o SottoSchema in questo modo
 

@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, UsePipes } from "@nestjs/common";
-import { ProductService } from "src/product/product.service";
 import { SaleDTO } from "src/validation-types/DTOs/dtos";
 import { saleJoiSchema } from "src/validation-types/joi-validation-schemas";
 import { JoiValidationPipe } from "src/validation.pipe";
