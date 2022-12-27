@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { updateProductError } from "src/custom_errors/crudErrors";
 import { IProduct, ProductDocument} from "src/mongoose-schemas/product.schema";
 // import { ProductDocument, ProductSchema } from "src/mongoose-schemas/product.schema";
-import { ProductDTO } from "src/validation-types/DTOs/dtos";
+import { ProductDTO, UpdateProductFieldDTO } from "src/validation-types/DTOs/dtos";
 
 @Injectable()
 export class ProductService{
@@ -31,17 +32,31 @@ export class ProductService{
         return this.productModel.where("name").equals(productName)
     }
 
-    async updateProductField(productId, fieldToUpdate, newValue): Promise<IProduct>{
-        try {
-            const productChanged = await this.productModel.findByIdAndUpdate(productId, {[fieldToUpdate]: newValue}, {
-                runValidators: true, //to run validators iven when we are updating (by default validators does not take place)
-                upsert: false, //to prevent adding new field
-                new: true, //to return the modified doc rather than the original
-            })
-            return productChanged;
-        } catch (error) {
-            
+    async updateProductField(options: UpdateProductFieldDTO): Promise<IProduct>{
+        //destructuring the "options" argument, if a specific param does not exist it's value will be null
+        let {
+            productId,
+            fieldToUpdate,
+            newValue,
+            parentField
+        } = options || null;
+        
+        if (fieldToUpdate === "_id") {
+            throw new updateProductError("You are not allowed to modify _id field on any entity into the database")
         }
+
+        //if parentField is set, means I wanto to update a nested field. So, I need to modify the fieldToUpdate this way
+        //to access a nested field parentField.nestedField returns nestedFiedl value
+        if(parentField){
+            fieldToUpdate = `${parentField}.${fieldToUpdate}`
+        }
+
+        const productChanged = await this.productModel.findByIdAndUpdate(productId, {[fieldToUpdate]: newValue}, {
+            runValidators: true, //to run validators iven when we are updating (by default validators does not take place)
+            upsert: false, //to prevent adding new field
+            new: true, //to return the modified doc rather than the original
+        })
+        return productChanged;
     }
 
     async deleteProduct(productId){

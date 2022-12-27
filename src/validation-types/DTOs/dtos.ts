@@ -77,9 +77,10 @@ export interface SaleDTO{
 export interface ExpenseDTO extends Omit<SaleDTO, "discount">{}
 
 export interface UpdateProductFieldDTO{
-    id: string,
+    productId: string,
     fieldToUpdate: string,
-    newValue: string | number
+    newValue: string | number,
+    parentField?: string
 }
 
 

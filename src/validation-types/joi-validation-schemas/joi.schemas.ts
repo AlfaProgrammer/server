@@ -53,9 +53,10 @@ function paymentStateRule(){return Joi.string().valid(
 
 ////////////////////////////////////////////////// OTHER DTOs ///////////////////////////////////////////
 export const updateProductFieldJoiSchema = Joi.object({
-    id: mongooseIdRule(),
+    productId: mongooseIdRule(),
     fieldToUpdate: Joi.string().required(),
-    newValue: Joi.required()
+    newValue: Joi.required(),
+    parentField: Joi.string()
 })
 
 

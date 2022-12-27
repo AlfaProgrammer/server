@@ -55,14 +55,26 @@ export class ProductController {
     @Put()
     @UsePipes(new JoiValidationPipe(updateProductFieldJoiSchema))
     async updateProduct(@Query() payload: UpdateProductFieldDTO){
-        const product = this.productService.updateProductField(payload.id, payload.fieldToUpdate, payload.newValue);        
-        return product
+
+    ////////////////////////////if you want to update a nested field, you must specify a parent field inside of witch the "fieldToUpdate" lives //////////////////////
+    //////////////////////////////////////////obviosly this parameter has to be bassed to te function throw the payload too //////////////////////////////////////////
+        try {
+            const product = await this.productService.updateProductField(payload);        
+            return product;
+        } catch (error) {
+            //"forbidden_field"? HttpStatus.FORBIDDEN: HttpStatus.BAD_REQUEST
+            //volendo si può fare una cosa del genere delle riga sopra, ma penso che entrabi gli errori siano delle BAD_REQUEST
+            throw new HttpException({
+                status:HttpStatus.BAD_REQUEST,
+                message: error.message
+            },HttpStatus.BAD_REQUEST)
+        }
     }
 
     @Delete(":id")
     async deleteById(@Param("id") id: string) {
         try {           
-          this.productService.deleteProduct(id);
+          return this.productService.deleteProduct(id);
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
