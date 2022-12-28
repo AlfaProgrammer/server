@@ -61,6 +61,7 @@ export interface TaskDTO{
 
 export interface SaleDTO{
     fromCatalog: boolean,
+    isEstimate?: boolean,
     product?: string, //ObjectId
     name?: string,
     discount: number, 

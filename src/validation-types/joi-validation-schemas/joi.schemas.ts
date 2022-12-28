@@ -159,6 +159,7 @@ export const taskJoiSchema = Joi.object({
 
 export const saleJoiSchema = Joi.object({
     fromCatalog: Joi.boolean().required(),
+    isEstimate: Joi.boolean(), //it's set by default on mongoose schema. You don't need to provide it sepcifically
     product: Joi.alternatives().conditional("fromCatalog", {
         is: true,
         then: mongooseIdRule(),
