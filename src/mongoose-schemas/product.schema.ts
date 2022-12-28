@@ -21,7 +21,7 @@ export type ProductDocument = HydratedDocument<IProduct>;
 
 export const ProductSchema =  new Schema({
     
-    name: {type:String, required: true},
+    name: {type:String, required: true}, // it MUST STAY required because of its importance on sales orders
     
     warehouseName: {type: String, required: true},
     warehouseLocation: LocationSchema,

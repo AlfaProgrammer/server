@@ -10,10 +10,17 @@ export class SaleController{
 
     @Post("create")
     @UsePipes(new JoiValidationPipe(saleJoiSchema))
-    async createSale(@Body() data: SaleDTO){
+    async createSale(@Body() paylaod: SaleDTO){
         try {
-            const sale = await this.saleService.createSale(data);
-            return sale;
+            //IF incoming paylaod has "fromCatalog" property set on true, we create a sale, otherwise we create an Estimate
+            if(paylaod.fromCatalog){
+                const sale = await this.saleService.createSale(paylaod);
+                return sale;                
+            } else {
+                const sale = await this.saleService.createEstimate(paylaod);
+                return sale;
+            }
+
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
@@ -21,6 +28,14 @@ export class SaleController{
             }, HttpStatus.BAD_REQUEST)
         }
     }
+
+    async deleteSale(){}
+
+    async updateSale(){}
+
+    async getAllSales(){}
+
+    async getSaleById(){}
 
     
     //We need to retrieve the product to compare its warehouseStockQuantity 

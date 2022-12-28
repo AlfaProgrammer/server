@@ -5,9 +5,9 @@ export type SaleDocument = HydratedDocument<ISale>
 
 export const SaleSchema = new Schema({
 
-    //utilizzabile anche per identificare poi i preventivi
+    //qhen fromCatalog param is false, instead of a sale we are creating an Estimate(same format/schema as a sale)
     fromCatalog:{type: Boolean, required: true, default: false}, //se seleziono questo, allora posso inserire i prodotti da catalogo
-
+    isEstimate: {type: Boolean, default: function(){return !this.fromCatalog}},
     product: {
         required: function() {return this.fromCatalog},
         type: Schema.Types.ObjectId, 
@@ -22,8 +22,8 @@ export const SaleSchema = new Schema({
         //non e da catalogo... altrimenti prende il nome del prodotto
         required: [
             function(){ return !this.fromCatalog },
-            "When product is not from catalog you have to provide a name field for the sale you're trying to save"
-        ],        
+            "When product is not from catalog you must provide a name field for the sale you're trying to save"
+        ],    
     },
     
     discount: {type: Number, required: true},
