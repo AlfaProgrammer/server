@@ -83,6 +83,14 @@ export interface UpdateProductFieldDTO{
     newValue: string | number,
     parentField?: string
 }
+export interface UpdateSaleFieldDTO{
+    saleId: string,
+    fieldToUpdate: string,
+    newValue: string | number,
+    // parentField?: string
+}
+
+
 
 
 ////////////////////////////////TYPES NEEDED/////////////////////////////////

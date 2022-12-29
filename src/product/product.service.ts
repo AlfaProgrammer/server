@@ -63,14 +63,9 @@ export class ProductService{
         return await this.productModel.deleteOne({"_id": productId});
     }
     //creo una funzione che mi recupera un prodotto in base all'id
-    async getProductById(productId: string){
-        try {
-            const product: IProduct = await this.productModel.findById(productId);    
-            return product;
-        } catch (error) {
-            throw new Error(`Something went wrong trying to retrieve product by ID ${productId}`);            
-        }
-
+    async getProductById(productId: string){    
+        const product: IProduct = await this.productModel.findById(productId);    
+        return product;
     }
 
     // async deleteOne(productId){

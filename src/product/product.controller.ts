@@ -52,10 +52,9 @@ export class ProductController {
         }
     }
 
-    @Put()
+    @Put("edit")
     @UsePipes(new JoiValidationPipe(updateProductFieldJoiSchema))
     async updateProduct(@Query() payload: UpdateProductFieldDTO){
-
     ////////////////////////////if you want to update a nested field, you must specify a parent field inside of witch the "fieldToUpdate" lives //////////////////////
     //////////////////////////////////////////obviosly this parameter has to be bassed to te function throw the payload too //////////////////////////////////////////
         try {
