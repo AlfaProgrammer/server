@@ -62,13 +62,8 @@ export class SaleService{
     async findAll(): Promise<ISale[]>{
         return this.saleModel.find();
     }
-    async findAllByIsEstimate(isEstimate: string): Promise<ISale[]>{
-        if(isEstimate === "true" || isEstimate === "false"){
-            return this.saleModel.find({isEstimate: isEstimate}) //ES6 key:value format here is being used
-        }else{
-            throw new Error(`You are trying to use "isEstimate" parameter with a value that is nor true or false. If you want to retrieve all sales
-                        try by deleteng isEstimate query param`)
-        }
+    async findAllByIsEstimate(isEstimate: boolean): Promise<ISale[]>{
+        return this.saleModel.find({isEstimate: isEstimate}) 
     }
     async updateSaleField(options: UpdateSaleFieldDTO): Promise<ISale>{
         /**
@@ -108,5 +103,9 @@ export class SaleService{
 
     async getSaleById(salaId: string): Promise<ISale>{
         return this.saleModel.findById(salaId);
+    }
+
+    async deleteSale(saleId){
+        return await this.saleModel.deleteOne({"_id": saleId});
     }
 }
