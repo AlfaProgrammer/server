@@ -189,6 +189,8 @@ export const saleJoiSchema = Joi.object({
     createdBy: mongooseIdRule() //ObjectId
 })
 
+////////////////////////////MISCELLANOUSE////////////////////////
+
 //DYNAMIC SCHEM BASED ON CONDITIONS 
 /* Use 
     - alternatives 

@@ -1,5 +1,8 @@
-import { Schema } from "mongoose"
-import { LocationSchema } from "./support-schemas/location.schema"
+import { Schema, HydratedDocument, InferSchemaType } from "mongoose";
+import { LocationSchema } from "./support-schemas/location.schema";
+
+export type IUser = InferSchemaType<typeof UserSchema>;
+export type UserDocument = HydratedDocument<IUser>;
 
 export const UserSchema = new Schema({
     firstName: {type: String, required: true},
